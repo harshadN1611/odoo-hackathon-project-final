@@ -20,6 +20,7 @@ const views = [
 ];
 
 const $ = (selector) => document.querySelector(selector);
+let authBound = false;
 const el = (tag, attrs = {}, children = []) => {
   const node = document.createElement(tag);
   Object.entries(attrs).forEach(([key, value]) => {
@@ -88,6 +89,8 @@ async function boot() {
 }
 
 function bindAuth() {
+  if (authBound) return;
+  authBound = true;
   document.querySelectorAll('[data-auth-tab]').forEach((btn) => btn.addEventListener('click', () => {
     document.querySelectorAll('[data-auth-tab]').forEach((b) => b.classList.remove('active'));
     document.querySelectorAll('.auth-pane').forEach((p) => p.classList.remove('active'));
@@ -113,7 +116,9 @@ function bindAuth() {
 async function doLogin(event, endpoint) {
   event.preventDefault();
   try {
-    const data = await api(endpoint, { method: 'POST', body: JSON.stringify(formData(event.target)) });
+    const body = formData(event.target);
+    if (body.loginId) body.loginId = body.loginId.trim();
+    const data = await api(endpoint, { method: 'POST', body: JSON.stringify(body) });
     state.token = data.token;
     localStorage.setItem('shiv_token', data.token);
     await boot();
@@ -126,10 +131,16 @@ async function signup(event) {
   event.preventDefault();
   try {
     const data = formData(event.target);
-    await api('/api/auth/signup', { method: 'POST', body: JSON.stringify(data) });
-    toast('Signup complete. Admin permissions are required before module access.', true);
+    const result = await api('/api/auth/signup', { method: 'POST', body: JSON.stringify(data) });
+    if (result.token) {
+      state.token = result.token;
+      localStorage.setItem('shiv_token', result.token);
+      toast('Signup complete. Logged in as system user.', true);
+      await boot();
+      return;
+    }
+    toast('Signup complete. Use System User login with this email.', true);
     event.target.reset();
-    // switch to login pane and prefill the newly registered email
     document.querySelectorAll('[data-auth-tab]').forEach((b) => b.classList.remove('active'));
     document.querySelectorAll('.auth-pane').forEach((p) => p.classList.remove('active'));
     const loginBtn = document.querySelector('[data-auth-tab="userLogin"]');
