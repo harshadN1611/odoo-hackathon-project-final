@@ -1,0 +1,22 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: shiv-erp-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: shiv_erp
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - shiv_erp_postgres_data:/var/lib/postgresql/data
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/001-schema.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d shiv_erp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  shiv_erp_postgres_data:

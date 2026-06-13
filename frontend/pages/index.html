@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shiv Furniture Works Mini ERP</title>
+    <link rel="stylesheet" href="/assets/styles.css" />
+  </head>
+  <body>
+    <section id="authScreen" class="auth-screen">
+      <div class="auth-hero">
+        <div class="brand-block">
+          <span class="brand-mark">SF</span>
+          <h1>Shiv Furniture Works</h1>
+          <p>Mini ERP for demand, procurement, production, inventory, delivery, audit logs, and access control.</p>
+        </div>
+      </div>
+      <div class="auth-card">
+        <div class="tabs">
+          <button class="tab active" data-auth-tab="userLogin">System User</button>
+          <button class="tab" data-auth-tab="adminLogin">Administrator</button>
+          <button class="tab" data-auth-tab="signup">Sign Up</button>
+        </div>
+        <form id="userLogin" class="auth-pane active">
+          <h2>System User Login</h2>
+          <label>Login ID<input name="loginId" type="email" value="amit.sales@shiv.local" required /></label>
+          <label>Password<input name="password" type="password" value="sales123" required /></label>
+          <button>Login</button>
+          <button type="button" class="link-btn" id="forgotBtn">Forgot Password</button>
+        </form>
+        <form id="adminLogin" class="auth-pane">
+          <h2>System Administrator Login</h2>
+          <label>Login ID<input name="loginId" type="email" value="admin@shiv.local" required /></label>
+          <label>Password<input name="password" type="password" value="admin123" required /></label>
+          <button>Admin Login</button>
+        </form>
+        <form id="signup" class="auth-pane">
+          <h2>New System User</h2>
+          <label>Name<input name="name" required /></label>
+          <label>Email ID<input name="email" type="email" required /></label>
+          <label>Password<input name="password" type="password" required /></label>
+          <label>Re-enter Password<input name="confirmPassword" type="password" required /></label>
+          <button>Submit</button>
+        </form>
+      </div>
+    </section>
+
+    <aside id="sidebar" class="sidebar hidden">
+      <div class="brand">
+        <span class="brand-mark">SF</span>
+        <div><strong>Shiv ERP</strong><small id="userLabel"></small></div>
+      </div>
+      <nav id="nav"></nav>
+      <button id="logoutBtn" class="ghost">Logout</button>
+    </aside>
+
+    <main id="app" class="app hidden">
+      <header class="topbar">
+        <div>
+          <p id="crumb">Dashboard</p>
+          <h1 id="title">Dashboard</h1>
+        </div>
+        <div class="top-actions">
+          <button id="refreshBtn" class="secondary">Refresh</button>
+          <button id="newBtn">New</button>
+        </div>
+      </header>
+      <section id="toast" class="toast hidden"></section>
+      <section id="content"></section>
+    </main>
+
+    <dialog id="modal">
+      <form method="dialog" class="modal-shell">
+        <div class="modal-head">
+          <h2 id="modalTitle">Record</h2>
+          <button value="cancel" class="icon-btn">x</button>
+        </div>
+        <div id="modalBody"></div>
+      </form>
+    </dialog>
+
+    <script type="module" src="/scripts/app.js"></script>
+  </body>
+</html>

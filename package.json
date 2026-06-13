@@ -1,0 +1,20 @@
+{
+  "name": "shiv-furniture-mini-erp",
+  "version": "1.0.0",
+  "description": "Mini ERP for Shiv Furniture Works demand-to-delivery workflows.",
+  "main": "backend/server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node backend/server.js",
+    "db:up": "docker compose up -d db",
+    "db:down": "docker compose down",
+    "db:reset": "docker compose down -v && docker compose up -d db",
+    "check": "node --check backend/server.js && node --check backend/routes/router.js && node --check backend/controllers/erpController.js && node --check frontend/scripts/app.js"
+  },
+  "dependencies": {
+    "pg": "^8.11.5"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
