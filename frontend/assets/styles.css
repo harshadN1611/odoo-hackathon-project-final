@@ -35,7 +35,8 @@ button:hover { background: var(--primary-dark); }
 button:disabled { opacity: 0.5; cursor: not-allowed; }
 .secondary, .ghost, .tab, .link-btn, .icon-btn { background: #e8eeea; color: var(--primary-dark); }
 .danger { background: var(--danger); }
-.hidden, .auth-pane { display: none !important; }
+.hidden { display: none !important; }
+.auth-pane { display: none; }
 .auth-pane.active { display: grid; gap: 0.8rem; }
 input, select, textarea {
   width: 100%;

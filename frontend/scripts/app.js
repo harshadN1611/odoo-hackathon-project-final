@@ -128,6 +128,15 @@ async function signup(event) {
     const data = formData(event.target);
     await api('/api/auth/signup', { method: 'POST', body: JSON.stringify(data) });
     toast('Signup complete. Admin permissions are required before module access.', true);
+    event.target.reset();
+    // switch to login pane and prefill the newly registered email
+    document.querySelectorAll('[data-auth-tab]').forEach((b) => b.classList.remove('active'));
+    document.querySelectorAll('.auth-pane').forEach((p) => p.classList.remove('active'));
+    const loginBtn = document.querySelector('[data-auth-tab="userLogin"]');
+    const loginPane = document.getElementById('userLogin');
+    loginBtn?.classList.add('active');
+    loginPane?.classList.add('active');
+    $('#userLogin [name=loginId]').value = data.email || '';
   } catch (error) {
     toast(error.message);
   }

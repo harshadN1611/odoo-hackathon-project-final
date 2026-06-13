@@ -172,11 +172,14 @@ async function adminLogin(req, res, ctx) { await loginBase(req, ctx, true); }
 async function signup(req, res, ctx) {
   const body = await ctx.readBody();
   if (!body.email || !body.password || body.password !== body.confirmPassword) fail(400, 'Passwords must match and email is required');
+  const email = String(body.email).toLowerCase();
+  const existing = await query('select id from users where lower(email)=$1', [email]);
+  if (existing.rows[0]) fail(409, 'Email is already registered');
   const { rows } = await query(
     `insert into users(name,email,password_hash,role,position,mobile_number,address)
      values($1,$2,$3,'User','Pending Assignment',$4,$5)
      returning id,name,email,mobile_number,address,position,role,created_at`,
-    [body.name || body.email, String(body.email).toLowerCase(), hashPassword(body.password), body.mobile_number || '', body.address || '']
+    [body.name || email, email, hashPassword(body.password), body.mobile_number || '', body.address || '']
   );
   ctx.send(201, { user: rows[0] });
 }
@@ -836,6 +839,9 @@ async function createUser(req, res, ctx) {
   const admin = await requirePermission(req, 'User', 'create');
   if (admin.role !== 'Admin') fail(403, 'Only Admin can create users');
   const body = await ctx.readBody();
+  // pre-check to avoid duplicate-key insert attempts
+  const exists = await query('select id from users where lower(email)=$1', [String(body.email || '').toLowerCase()]);
+  if (exists.rows[0]) fail(409, 'Email is already registered');
   const client = await pool.connect();
   try {
     await client.query('begin');
